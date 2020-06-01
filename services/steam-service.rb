@@ -7,8 +7,12 @@ class SteamService
   def oow_statuses
     OOW_TEAM.map do |member|
       steam_data = Steam::User.summary(member[:steam_id])
-      { name: steam_data['personaname'], status: humanize_status(steam_data['personastate'], steam_data['gameid']) }
-    end
+      if steam_data['personastate'] == 0
+        nil
+      else
+        { name: steam_data['personaname'], status: humanize_status(steam_data['personastate'], steam_data['gameid']) }
+      end
+    end.reject(&:nil?)
   end
 
   private
@@ -18,8 +22,7 @@ class SteamService
     when 0
       'Оффлайн'
     when 1
-      'Онлайн' unless game_id
-      STEAM_GAMES[game_id.to_i]
+      game_id ? STEAM_GAMES[game_id.to_i] : 'Онлайн'
     else
       'Спить'
     end
