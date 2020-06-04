@@ -8,3 +8,5 @@ gem 'telegram-bot'
 gem 'dotenv'
 gem 'steam-api'
 gem 'open_dota_api'
+
+gem "passenger", ">= 5.0.11"
