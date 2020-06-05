@@ -9,6 +9,6 @@ class MainController < Telegram::Bot::UpdatesController
   end
 
   def shosh!(*)
-    respond_with :message, text: 'az'
+    respond_with :message, text: 'az ziz'
   end
 end
