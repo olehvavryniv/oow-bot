@@ -11,4 +11,8 @@ class MainController < Telegram::Bot::UpdatesController
     statuses = SteamService.new.oow_statuses.map { |d| "#{d[:name]} - #{d[:status]}" }.join("\n")
     respond_with :message, text: statuses
   end
+
+  def shosh!(*)
+    respond_with :message, text: 'az'
+  end
 end
