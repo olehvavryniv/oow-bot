@@ -22,4 +22,10 @@ class OowBot
   end
 end
 
+if ARGV.include? 'daemon'
+  Process.daemon(true)
+  pid_file = File.dirname(__FILE__) + 'oow-bot.pid'
+  File.open(pid_file, 'w') { |f| f.write Process.pid }
+end
+
 OowBot.instance.launch
