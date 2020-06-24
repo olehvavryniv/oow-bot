@@ -51,7 +51,7 @@ GEM
     open_dota_api (0.4.2)
       hashable (~> 0.1.2)
       httparty (~> 0.17.1)
-    rack (2.2.2)
+    rack (2.2.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails-dom-testing (2.0.3)
