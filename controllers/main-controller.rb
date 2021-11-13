@@ -13,4 +13,8 @@ class MainController < Telegram::Bot::UpdatesController
   def shosh!(*)
     respond_with :message, text: SHOSHES.sample
   end
+
+  def random!(*)
+    respond_with :message, text: OpenDotaService.new.random_hero
+  end
 end
