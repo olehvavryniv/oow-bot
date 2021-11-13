@@ -1,0 +1,9 @@
+.ENV
+.env
+.env.example
+CODEOWNERS
+README.md
+.gitignore
+.git
+.idea
+

@@ -21,3 +21,20 @@ Launch
 ```
 ruby oow-bot.rb
 ```
+
+Docker
+------------
+Run
+```bash
+docker run --name oow-bot --restart=always --mount type=bind,src=/root/oow-bot-env,dst=/usr/src/app/.ENV -d ghcr.io/olehvavryniv/oow-bot
+```
+
+Build
+```bash
+docker build -t ghcr.io/olehvavryniv/oow-bot .
+```
+
+Publish
+```bash
+docker build -t ghcr.io/olehvavryniv/oow-bot .
+```

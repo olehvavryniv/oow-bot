@@ -11,8 +11,8 @@ class OowBot
   include Singleton
 
   def initialize
-    @bot = Telegram::Bot::Client.new(ENV['TELEGRAM_API_TOKEN'])
-    Steam.apikey = ENV['STEAM_API_KEY']
+    @bot = Telegram::Bot::Client.new(ENV.fetch('TELEGRAM_API_TOKEN'), ENV.fetch('TELEGRAM_BOT_NICKNAME'))
+    Steam.apikey = ENV.fetch('STEAM_API_KEY')
   end
 
   def launch
@@ -20,12 +20,6 @@ class OowBot
     @poller = Telegram::Bot::UpdatesPoller.new(@bot, MainController, logger: logger)
     @poller.start
   end
-end
-
-if ARGV.include? 'daemon'
-  Process.daemon(true)
-  pid_file = File.dirname(__FILE__) + 'oow-bot.pid'
-  File.open(pid_file, 'w') { |f| f.write Process.pid }
 end
 
 OowBot.instance.launch

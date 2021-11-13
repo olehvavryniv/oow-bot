@@ -1,0 +1,13 @@
+FROM ruby:3.0
+
+WORKDIR /usr/src/app
+
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+COPY . .
+
+ENV TELEGRAM_API_TOKEN=130322733:AAGkjjBnAn44l72Att4nDBLhCe0MmZDepP8
+ENV STEAM_API_KEY=9FCB2C136F117892E2FC8129A63B57EE
+
+CMD ["ruby", "oow-bot.rb"]
