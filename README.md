@@ -36,5 +36,5 @@ docker build -t ghcr.io/olehvavryniv/oow-bot .
 
 Publish
 ```bash
-docker build -t ghcr.io/olehvavryniv/oow-bot .
+docker push ghcr.io/olehvavryniv/oow-bot
 ```
