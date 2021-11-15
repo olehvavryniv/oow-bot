@@ -16,6 +16,10 @@ Create `.ENV` file from `.env.example` or ask some developers for example
 
 `cp .env.example .env`
 
+Install dependencies
+
+`bundle install`
+
 Launch
 ------------
 ```
