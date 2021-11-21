@@ -6,6 +6,6 @@ require './constants.rb'
 class OpenDotaService
 
   def random_hero
-    OpenDotaApi.heroes.random.localized_name
+    OpenDotaApi.heroes.sample.localized_name
   end
 end

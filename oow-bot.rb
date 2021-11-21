@@ -1,24 +1,35 @@
 # frozen_string_literal: true
 
+require 'singleton'
 require 'telegram/bot'
 require 'logger'
 require './controllers/main-controller.rb'
 require 'dotenv'
+require 'byebug'
 
 Dotenv.load
 
 class OowBot
-  include Singleton
+  include ::Singleton
+
+  attr_reader :bot
 
   def initialize
-    @bot = Telegram::Bot::Client.new(ENV.fetch('TELEGRAM_API_TOKEN'), ENV.fetch('TELEGRAM_BOT_NICKNAME'))
-    Steam.apikey = ENV.fetch('STEAM_API_KEY')
+    @bot = ::Telegram::Bot::Client.new(ENV.fetch('TELEGRAM_API_TOKEN'), ENV.fetch('TELEGRAM_BOT_NICKNAME'))
+    ::Steam.apikey = ENV.fetch('STEAM_API_KEY')
   end
 
   def launch
     logger = Logger.new(STDOUT)
-    @poller = Telegram::Bot::UpdatesPoller.new(@bot, MainController, logger: logger)
+    @poller = ::Telegram::Bot::UpdatesPoller.new(@bot, MainController, logger: logger)
     @poller.start
+  end
+end
+
+Thread.new do
+  while true do
+    sleep 60
+    ::ShotamService.instance.sanitize_info
   end
 end
 
