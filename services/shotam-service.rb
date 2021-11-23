@@ -39,7 +39,9 @@ class ShotamService
     else
       res = ""
       @ready_info.each do |_id, info|
-        res += "🔹 #{user_name(info)} - #{humanize_time(info[:time])}\n"
+        time, estimate = time_choice_to_estimate(info[:time])
+        time_info = estimate ? estimate : time.strftime('%H:%M')
+        res += "🔹 #{user_name(info)} - #{time_info}\n"
       end
       res
     end
@@ -67,26 +69,27 @@ class ShotamService
     }
   end
 
-  def humanize_time(time)
-    case time
+  def time_choice_to_estimate(time_choice)
+    now = Time.now
+    case time_choice
     when 've'
-      'Вє (лох)'
+      [nil, 'Вє (лох)']
     when 'last'
-      'Буде 5м'
+      [nil, 'Буде 5м']
     when 'coming'
-      'Біжить'
+      [now + (5 * 60), nil]
     when '10_min'
-      'Через 10 хв'
+      [now + (10 * 60), nil]
     when '20_min'
-      'Через 20 хв'
+      [now + (20 * 60), nil]
     when 'in_20'
-      'Буде в 20'
+      [Time.local(now.year, now.month, now.day, 20, 0), nil]
     when 'in_21'
-      'Буде в 21'
+      [Time.local(now.year, now.month, now.day, 21, 0), nil]
     when 'in_22'
-      'Буде в 22'
+      [Time.local(now.year, now.month, now.day, 22, 0), nil]
     else
-      ''
+      [nil, nil]
     end
   end
 
