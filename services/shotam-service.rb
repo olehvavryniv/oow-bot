@@ -73,7 +73,7 @@ class ShotamService
     now = Time.now
     case time_choice
     when 've'
-      [nil, 'Вє (лох)']
+      [nil, "Вє (#{LOH_NAMES.sample})"]
     when 'last'
       [nil, 'Буде 5м']
     when 'coming'
