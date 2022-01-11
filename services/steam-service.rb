@@ -22,9 +22,15 @@ class SteamService
     when 0
       'Оффлайн'
     when 1
-      game_id ? STEAM_GAMES[game_id.to_i] : 'Онлайн'
+      game_id ? game_name_by_id(game_id.to_i) : 'Онлайн'
     else
       'Спить'
     end
+  end
+
+  def game_name_by_id(game_id)
+    name = STEAM_GAMES[game_id.to_i]
+    name = LOH_GAMES.sample unless name
+    name
   end
 end
