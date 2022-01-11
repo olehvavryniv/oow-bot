@@ -17,7 +17,7 @@ class ShotamService
   end
 
   def set_ready_info(from, time)
-    @ready_info[from['id']] = { time: time, info: from }
+    @ready_info[from['id']] = { time: time, info: from, sent_at: Time.now }
     @last_messages.each do |chat_id, message_id|
       OowBot.instance.bot.edit_message_text(chat_id: chat_id, message_id: message_id, text: message_body, reply_markup: reply_markup)
     end
@@ -39,7 +39,7 @@ class ShotamService
     else
       res = ""
       @ready_info.each do |_id, info|
-        time, estimate = time_choice_to_estimate(info[:time])
+        time, estimate = time_choice_to_estimate(info)
         time_info = estimate ? estimate : time.strftime('%H:%M')
         res += "🔹 #{user_name(info)} - #{time_info}\n"
       end
@@ -69,19 +69,19 @@ class ShotamService
     }
   end
 
-  def time_choice_to_estimate(time_choice)
+  def time_choice_to_estimate(info)
     now = Time.now
-    case time_choice
+    case info[:time]
     when 've'
       [nil, "Вє (#{LOH_NAMES.sample})"]
     when 'last'
       [nil, 'Буде 5м']
     when 'coming'
-      [now + (5 * 60), nil]
+      [info[:sent_at] + (5 * 60), nil]
     when '10_min'
-      [now + (10 * 60), nil]
+      [info[:sent_at] + (10 * 60), nil]
     when '20_min'
-      [now + (20 * 60), nil]
+      [info[:sent_at] + (20 * 60), nil]
     when 'in_20'
       [Time.local(now.year, now.month, now.day, 20, 0), nil]
     when 'in_21'
