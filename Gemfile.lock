@@ -93,6 +93,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   dotenv
+  faraday
   open_dota_api
   steam-api
   telegram-bot

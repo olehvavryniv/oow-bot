@@ -16,7 +16,8 @@ OOW_TEAM = [
 
 STEAM_GAMES = {
   570 => 'Dota2',
-  730 => 'CS:GO'
+  730 => 'CS:GO',
+  578080 => 'PUBG'
 }
 
 SHOSHES = [
