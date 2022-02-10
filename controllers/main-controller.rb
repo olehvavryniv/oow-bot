@@ -3,6 +3,7 @@
 require './services/steam-service.rb'
 require './services/shotam-service.rb'
 require './services/open_dota_service.rb'
+require './services/last-games-sevice.rb'
 require './constants.rb'
 
 class MainController < Telegram::Bot::UpdatesController
@@ -26,6 +27,10 @@ class MainController < Telegram::Bot::UpdatesController
     (message_text, reply_markup) = service.generate_message
     message = respond_with :message, text: message_text, reply_markup: reply_markup
     ShotamService.instance.last_messages[message['result']['chat']['id']] = message['result']['message_id']
+  end
+
+  def test!(*)
+    puts chat['id']
   end
 
   def ready_callback_query(time = nil, *)

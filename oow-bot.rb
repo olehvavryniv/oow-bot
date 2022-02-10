@@ -6,6 +6,7 @@ require 'logger'
 require './controllers/main-controller.rb'
 require 'dotenv'
 require 'byebug'
+require 'graphlient'
 
 Dotenv.load
 
@@ -30,6 +31,17 @@ Thread.new do
   while true do
     sleep 60
     ::ShotamService.instance.sanitize_info
+  end
+end
+
+Thread.new do
+  while true do
+    begin
+      sleep 60 * 1
+      ::LastGamesService.new.process_last_games
+    rescue
+      # pofig
+    end
   end
 end
 
