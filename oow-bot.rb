@@ -37,7 +37,7 @@ end
 Thread.new do
   while true do
     begin
-      sleep 60 * 1
+      sleep 60 * 15
       ::LastGamesService.new.process_last_games
     rescue
       # pofig
