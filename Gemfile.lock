@@ -66,7 +66,7 @@ GEM
     httpclient (2.8.3)
     i18n (1.9.1)
       concurrent-ruby (~> 1.0)
-    loofah (2.13.0)
+    loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mime-types (3.4.1)
@@ -75,12 +75,14 @@ GEM
     minitest (5.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
-    nokogiri (1.13.1-x86_64-darwin)
+    nokogiri (1.13.10-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.13.10-x86_64-linux)
       racc (~> 1.4)
     open_dota_api (0.4.2)
       hashable (~> 0.1.2)
       httparty (~> 0.17.1)
-    racc (1.6.0)
+    racc (1.6.1)
     rack (2.2.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -102,6 +104,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   byebug
