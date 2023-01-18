@@ -77,11 +77,13 @@ GEM
     multipart-post (2.1.1)
     nokogiri (1.13.1-x86_64-darwin)
       racc (~> 1.4)
+    nokogiri (1.13.1-x86_64-linux)
+      racc (~> 1.4)
     open_dota_api (0.4.2)
       hashable (~> 0.1.2)
       httparty (~> 0.17.1)
     racc (1.6.0)
-    rack (2.2.3)
+    rack (2.2.6.2)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails-dom-testing (2.0.3)
@@ -102,6 +104,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   byebug
