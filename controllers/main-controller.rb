@@ -5,9 +5,9 @@ require './services/shotam-service.rb'
 require './services/open_dota_service.rb'
 require './services/last-games-sevice.rb'
 require './constants.rb'
+require './services/cs_positions_service.rb'
 
 class MainController < Telegram::Bot::UpdatesController
-  @@message = nil
   include CallbackQueryContext
 
   def steam!(*)
@@ -31,42 +31,17 @@ class MainController < Telegram::Bot::UpdatesController
   end
 
   def position!(*)
-    position_key = CS_POSITIONS.to_a.sample.first
+    position_key = ::CsPositionsService.new.generate_random_position_key
     position_names = CS_POSITIONS[position_key].values.join(", ")
     respond_with :photo, photo: File.open(position_key), caption: position_names
   end
 
   def random_position!(*)
-    @@message = nil
-    position_key = CS_POSITIONS.to_a.sample.first
-    correct_names = CS_POSITIONS[position_key].values.first
-    map = CS_POSITIONS[position_key].keys[0]
-    given_map_positions = CS_POSITIONS.select {|k, v| v.keys.first == map }
-    #remove correct name from the list
-    given_map_positions.delete(position_key)
-    wrong_names = []
-    given_map_positions.values.each do |i|
-      wrong_names << i[map].flatten
-    end
-    correct_answer = correct_names.sample
-    formatted_array =  (wrong_names.flatten.first(2) << correct_answer).shuffle
-
+    position_key = ::CsPositionsService.new.generate_random_position_key
     bot.send_photo(chat_id: chat['id'], photo: File.open(position_key), caption: "What is the name of this position?")
-    answers =
-      {
-        inline_keyboard: [
-          [
-            { text: "#{formatted_array[0]}", callback_data: "random_position:#{formatted_array[0]}/#{correct_answer}" },
-          ],
-          [
-            { text: "#{formatted_array[1]}", callback_data: "random_position:#{formatted_array[1]}/#{correct_answer}" },
-          ],
-          [
-            { text: "#{formatted_array[2]}", callback_data: "random_position:#{formatted_array[2]}/#{correct_answer}" },
-          ],
-        ]
-      }
-    respond_with :message, text: "Choose one:", reply_markup: answers
+    answers = ::CsPositionsService.new.generate_answers_for_given_position(position_key)
+    message = respond_with :message, text: "Choose one:", reply_markup: answers
+    OowBot.redis.set('last_cs_position_message', message['result']['message_id'])
   end
 
   def test!(*)
@@ -81,11 +56,14 @@ class MainController < Telegram::Bot::UpdatesController
   end
 
   def random_position_callback_query(answer, *)
-    # unreal kostilyaka
-    return if @@message
     status = (answer.split('/').uniq.length == 1)
     text = status ? "✅Correct! This position is called <b><i>#{answer.split('/').first}</i></b>" : "❌#{LOH_NAMES.sample.capitalize}! This position is called <b><i>#{answer.split('/').last}</i></b>"
-    @@message = bot.send_message(chat_id: chat['id'], text: text, parse_mode: "HTML")
+    message_id = OowBot.redis.get('last_cs_position_message')
+    bot.edit_message_reply_markup(chat_id: chat['id'], message_id: message_id,reply_markup: {
+      inline_keyboard: []
+    })
+    sleep(1)
+    bot.edit_message_text(chat_id: chat['id'], message_id: message_id, text: text, parse_mode: "HTML")
   rescue Telegram::Bot::Error => e
     # ve
   end

@@ -32,7 +32,6 @@ SHOSHES = [
 CS_POSITIONS = {
   "images/overpass/b_site_water.webp" => { "Overpass" => ["Water", "B-site Water", "Backplant"] },
   "images/overpass/a-default.webp" => { "Overpass" => ["A Default"] },
-  "images/overpass/overpass_a_default.webp" => { "Overpass" => ["A Default"] },
   "images/overpass/a-long.webp" => { "Overpass" => ["A Long", "Long"] },
   "images/overpass/a-short.webp" => { "Overpass" => ["A Short"] },
   "images/overpass/abc_jungle.webp" => { "Overpass" => ["ABC", "Jungle"] },
