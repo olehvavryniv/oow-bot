@@ -11,6 +11,7 @@ class MainController < Telegram::Bot::UpdatesController
 
   def steam!(*)
     statuses = ::SteamService.new.oow_statuses.map { |d| "#{d[:name]} - #{d[:status]}" }.join("\n")
+    statuses = 'Нікого онлайн' if statuses.empty?
     respond_with :message, text: statuses
   end
 
