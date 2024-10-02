@@ -35,7 +35,7 @@ docker run --name oow-bot --restart=always --mount type=bind,src=/root/oow-bot-e
 
 Build
 ```bash
-docker build -t ghcr.io/olehvavryniv/oow-bot .
+docker build --platform="linux/amd64" -t ghcr.io/olehvavryniv/oow-bot .
 ```
 
 Publish
