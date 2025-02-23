@@ -53,18 +53,25 @@ class ShotamService
       inline_keyboard: [
         [
           { text: '❌ Вє', callback_data: 'ready:ve' },
-          { text: '🏳️‍🌈 Якщо я 5й', callback_data: 'ready:last' },
+          { text: '👠 Хз', callback_data: 'ready:hz' },
+          { text: '🏳️‍🌈 Буду 5м', callback_data: 'ready:last' },
         ],
         [
           { text: '🏃 Йду', callback_data: 'ready:coming' },
           { text: '⏳ 10 хв', callback_data: 'ready:10_min' },
           { text: '⏳ 20 хв', callback_data: 'ready:20_min' },
+          { text: '⏳ 30 хв', callback_data: 'ready:30_min' },
         ],
         [
-          { text: '🕗 Буду в 20', callback_data: 'ready:in_20' },
-          { text: '🕘 Буду в 21', callback_data: 'ready:in_21' },
-          { text: '🕙 Буду в 22', callback_data: 'ready:in_22' },
+          { text: '🕗 20:00', callback_data: 'ready:in_20' },
+          { text: '🕘 21:00', callback_data: 'ready:in_21' },
+          { text: '🕘 21:30', callback_data: 'ready:in_2130' },
         ],
+        [
+          { text: '🕙 22:00', callback_data: 'ready:in_22' },
+          { text: '🕙 22:30', callback_data: 'ready:in_2230' },
+          { text: '🕙 23:00', callback_data: 'ready:in_23' },
+        ]
       ]
     }
   end
@@ -74,6 +81,8 @@ class ShotamService
     case info[:time]
     when 've'
       [nil, "Вє (#{LOH_NAMES.sample})"]
+    when 'hz'
+      [nil, "Каблук думає"]
     when 'last'
       [nil, 'Буде 5м']
     when 'coming'
@@ -82,12 +91,20 @@ class ShotamService
       [info[:sent_at] + (10 * 60), nil]
     when '20_min'
       [info[:sent_at] + (20 * 60), nil]
+    when '30_min'
+      [info[:sent_at] + (30 * 60), nil]
     when 'in_20'
       [Time.local(now.year, now.month, now.day, 20, 0), nil]
     when 'in_21'
       [Time.local(now.year, now.month, now.day, 21, 0), nil]
+    when 'in_2130'
+      [Time.local(now.year, now.month, now.day, 21, 30), nil]
     when 'in_22'
       [Time.local(now.year, now.month, now.day, 22, 0), nil]
+    when 'in_2230'
+      [Time.local(now.year, now.month, now.day, 22, 30), nil]
+    when 'in_23'
+      [Time.local(now.year, now.month, now.day, 23, 0), nil]
     else
       [nil, nil]
     end
