@@ -12,6 +12,8 @@ OOW_TEAM = [
   { name: 'Влад', steam_id: '76561198914888395', steam_account_id: 954622667 },
   { name: 'Юра', steam_id: '76561198048275645', steam_account_id: 88009917 },
   { name: 'Петро', steam_id: '76561198369308194', steam_account_id: 409042466 },
+  { name: 'Аліна', steam_id: '76561198081618425', steam_account_id: 121352697 },
+  { name: 'Андрюха', steam_id: '76561198115329223', steam_account_id: 155063495 },
 ].freeze
 
 STEAM_GAMES = {

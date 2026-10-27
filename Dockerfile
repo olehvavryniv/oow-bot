@@ -7,4 +7,4 @@ RUN bundle install
 
 COPY . .
 
-CMD ["ruby", "oow-bot.rb"]
+CMD ["bundle", "exec", "ruby", "oow-bot.rb"]
