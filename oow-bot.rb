@@ -7,7 +7,6 @@ require './controllers/main-controller.rb'
 require 'dotenv'
 require 'byebug'
 require 'graphlient'
-require 'redis'
 
 Dotenv.load
 
@@ -25,12 +24,6 @@ class OowBot
     logger = Logger.new(STDOUT)
     @poller = ::Telegram::Bot::UpdatesPoller.new(@bot, MainController, logger: logger)
     @poller.start
-  end
-
-  def self.redis
-    @redis ||= ConnectionPool::Wrapper.new do
-      Redis.new
-    end
   end
 end
 

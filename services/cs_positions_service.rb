@@ -1,44 +1,46 @@
+require 'singleton'
+
 class CsPositionsService
-  def generate_random_position_key
-    CS_POSITIONS.to_a.sample.first
+  include ::Singleton
+
+  OPTIONS_COUNT = 3
+
+  def random_position
+    CS_POSITIONS.sample
   end
 
-  def generate_answers_for_given_position(position_key)
-    correct_names = get_names_from_position_key(position_key)
-    map = get_map_from_position_key(position_key)
-    given_map_positions = get_all_positions_for_given_map(map)
-    #remove correct name from the list
-    given_map_positions.delete(position_key)
-    wrong_names = []
-    given_map_positions.values.each do |i|
-      wrong_names << i[map].flatten
-    end
-    correct_answer = correct_names.sample
-    formatted_array =  (wrong_names.flatten.first(2) << correct_answer).shuffle
+  # Returns the image to show and the keyboard of answers to pick from.
+  # The callback data carries the position's index, not the answer itself,
+  # so the reveal can list every callout the position is known by.
+  def new_question
+    index = rand(CS_POSITIONS.size)
+    position = CS_POSITIONS[index]
+    options = (decoys_for(position) << position[:names].sample).shuffle
+
     {
-      inline_keyboard: [
-        [
-          { text: "#{formatted_array[0]}", callback_data: "random_position:#{formatted_array[0]}/#{correct_answer}" },
-        ],
-        [
-          { text: "#{formatted_array[1]}", callback_data: "random_position:#{formatted_array[1]}/#{correct_answer}" },
-        ],
-        [
-          { text: "#{formatted_array[2]}", callback_data: "random_position:#{formatted_array[2]}/#{correct_answer}" },
-        ],
-      ]
+      image: position[:image],
+      keyboard: {
+        inline_keyboard: options.map do |name|
+          [{ text: name, callback_data: "random_position:#{index}:#{name}" }]
+        end
+      }
+    }
+  end
+
+  def check(index, chosen)
+    position = CS_POSITIONS[index.to_i]
+    {
+      correct: position[:names].include?(chosen),
+      names: position[:names].join(' / ')
     }
   end
 
   private
 
-  def get_names_from_position_key(position_key)
-    CS_POSITIONS[position_key].values.first
-  end
-  def get_map_from_position_key(position_key)
-    CS_POSITIONS[position_key].keys[0]
-  end
-  def get_all_positions_for_given_map(map)
-    CS_POSITIONS.select {|k, v| v.keys.first == map }
+  def decoys_for(position)
+    CS_POSITIONS
+      .select { |p| p[:map] == position[:map] && p[:image] != position[:image] }
+      .sample(OPTIONS_COUNT - 1)
+      .map { |p| p[:names].sample }
   end
 end

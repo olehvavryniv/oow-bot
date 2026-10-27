@@ -31,18 +31,20 @@ class MainController < Telegram::Bot::UpdatesController
     ShotamService.instance.last_messages[message['result']['chat']['id']] = message['result']['message_id']
   end
 
-  def position!(*)
-    position_key = ::CsPositionsService.new.generate_random_position_key
-    position_names = CS_POSITIONS[position_key].values.join(", ")
-    respond_with :photo, photo: File.open(position_key), caption: position_names
+  def learn_position!(*)
+    position = ::CsPositionsService.instance.random_position
+    File.open(position[:image]) do |photo|
+      respond_with :photo, photo: photo, caption: "#{position[:map]} — #{position[:names].join(' / ')}"
+    end
   end
 
   def random_position!(*)
-    position_key = ::CsPositionsService.new.generate_random_position_key
-    bot.send_photo(chat_id: chat['id'], photo: File.open(position_key), caption: "What is the name of this position?")
-    answers = ::CsPositionsService.new.generate_answers_for_given_position(position_key)
-    message = respond_with :message, text: "Choose one:", reply_markup: answers
-    OowBot.redis.set('last_cs_position_message', message['result']['message_id'])
+    question = ::CsPositionsService.instance.new_question
+    File.open(question[:image]) do |photo|
+      respond_with :photo, photo: photo,
+                   caption: 'What is the name of this position?',
+                   reply_markup: question[:keyboard]
+    end
   end
 
   def test!(*)
@@ -56,15 +58,17 @@ class MainController < Telegram::Bot::UpdatesController
     # pofig
   end
 
-  def random_position_callback_query(answer, *)
-    status = (answer.split('/').uniq.length == 1)
-    text = status ? "✅Correct! This position is called <b><i>#{answer.split('/').first}</i></b>" : "❌#{LOH_NAMES.sample.capitalize}! This position is called <b><i>#{answer.split('/').last}</i></b>"
-    message_id = OowBot.redis.get('last_cs_position_message')
-    bot.edit_message_reply_markup(chat_id: chat['id'], message_id: message_id,reply_markup: {
-      inline_keyboard: []
-    })
-    sleep(1)
-    bot.edit_message_text(chat_id: chat['id'], message_id: message_id, text: text, parse_mode: "HTML")
+  def random_position_callback_query(data, *)
+    index, chosen = data.split(':', 2)
+    result = ::CsPositionsService.instance.check(index, chosen)
+    answer_callback_query(result[:correct] ? 'Correct' : 'Nope')
+
+    caption = if result[:correct]
+                "✅Correct! This position is called <b><i>#{result[:names]}</i></b>"
+              else
+                "❌#{LOH_NAMES.sample.capitalize}! This position is called <b><i>#{result[:names]}</i></b>"
+              end
+    edit_message :caption, caption: caption, parse_mode: 'HTML', reply_markup: { inline_keyboard: [] }
   rescue Telegram::Bot::Error => e
     # ve
   end
